@@ -1,8 +1,8 @@
 const express = require('express');
+const methodOverride = require('method-override');
 const path = require('path');
 var morgan = require('morgan');
 var handlebars  = require('express-handlebars');
-const { resolveSoa } = require('dns');
 const app = express();
 const port = 3000;
 
@@ -14,6 +14,10 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
+
 // Connect db
 db.connect();
 
@@ -23,7 +27,10 @@ app.use(morgan('combined'));
 
 // Template engine
 app.engine("hbs", handlebars({
-    extname: '.hbs'
+    extname: '.hbs',
+    helpers: {
+        sum: (a, b) => a+b,
+    }
 }));
 app.set('view engine', 'hbs');
 
