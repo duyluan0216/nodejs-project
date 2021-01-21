@@ -10,6 +10,13 @@ class meController {
             }))
             .catch(()=>console.log('Lỗi'))
     }
+    trashCourses(req,res, next){
+        Course.findDeleted({})
+        .then( courses=> res.render('../views/me/trash-courses.hbs',{
+            courses: toObjects(courses)
+        }))
+        .catch(()=>console.log('Lỗi'))
+    }
 }
 
 module.exports = new meController();
